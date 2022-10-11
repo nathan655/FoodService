@@ -71,16 +71,16 @@ public class Food {
 //                getPickupTimes();
                 store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
                     try {
-                        return pickupTime.getStore().getId() == ps.executeQuery().getInt("id");
+                        return pickupTime.getStore().getId() == rs2.getInt("id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
                 }).collect(Collectors.toList()));
 
-                getPhoneNumbers();
+//                getPhoneNumbers();
                 store.setPhoneNumbers(phoneNumbers.stream().filter(p -> {
                     try {
-                        return p.getUser().getId() == ps.executeQuery().getInt("id");
+                        return p.getUser().getId() == rs2.getInt("id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -146,30 +146,31 @@ public class Food {
     public List<Customer> getCustomers() {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer");
-            while (ps.executeQuery().next()) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 Customer customer = new Customer();
-                customer.setId(ps.executeQuery().getInt("id"));
-                customer.setFirstName(ps.executeQuery().getString("first_name"));
-                customer.setLastName(ps.executeQuery().getString("last_name"));
-                customer.setEmail(ps.executeQuery().getString("email"));
-                customer.setPassword(ps.executeQuery().getString("password"));
-                customer.setAddress(ps.executeQuery().getString("address"));
-                customer.setCity(ps.executeQuery().getString("city"));
-                customer.setState(ps.executeQuery().getString("state"));
-                customer.setZipCode(ps.executeQuery().getString("zip_code"));
-                customer.setCountry(ps.executeQuery().getString("country"));
-                customer.setCreatedDate(ps.executeQuery().getDate("created_date").toLocalDate());
-                customer.setUpdatedDate(ps.executeQuery().getDate("updated_date").toLocalDate());
-                customer.setUserName(ps.executeQuery().getString("user_name"));
+                customer.setId(rs.getInt("id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPassword(rs.getString("password"));
+                customer.setAddress(rs.getString("address"));
+                customer.setCity(rs.getString("city"));
+                customer.setState(rs.getString("state"));
+                customer.setZipCode(rs.getString("zip_code"));
+                customer.setCountry(rs.getString("country"));
+                customer.setCreatedDate(rs.getDate("created_date").toLocalDate());
+                customer.setUpdatedDate(rs.getDate("updated_date").toLocalDate());
+                customer.setUserName(rs.getString("user_name"));
 
-                getPhoneNumbers();
+//                getPhoneNumbers();
                 customer.setPhoneNumbers(phoneNumbers.stream().filter(p -> {
                     try {
-                        return p.getUser().getId() == ps.executeQuery().getInt("id");
+                        return p.getUser().getId() == rs.getInt("id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
-                }).toList());
+                }).collect(Collectors.toList()));
                 customers.add(customer);
             }
         } catch (SQLException e) {
@@ -186,15 +187,16 @@ public class Food {
     public List<Order> getOrders() {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM order;");
-            while (ps.executeQuery().next()) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 Order order = new Order();
-                order.setId(ps.executeQuery().getLong("id"));
+                order.setId(rs.getLong("id"));
                 order.setOrderDate(LocalDate.now());
-                order.setTotal(ps.executeQuery().getDouble("total"));
+                order.setTotal(rs.getDouble("total"));
                 getCustomers();
                 order.setCustomer(getCustomers().stream().filter(c -> {
                     try {
-                        return c.getId() == ps.executeQuery().getInt("customer_id");
+                        return c.getId() == rs.getInt("customer_id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -214,14 +216,15 @@ public class Food {
     public List<Orderline> getOrderlines() {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM orderline;");
-            while (ps.executeQuery().next()) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 Orderline orderline = new Orderline();
-                orderline.setId(ps.executeQuery().getLong("id"));
-                orderline.setQuantity(ps.executeQuery().getInt("quantity"));
+                orderline.setId(rs.getLong("id"));
+                orderline.setQuantity(rs.getInt("quantity"));
                 getOrders();
                 orderline.setOrder(getOrders().stream().filter(o -> {
                     try {
-                        return o.getId() == ps.executeQuery().getLong("order_id");
+                        return o.getId() == rs.getLong("order_id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -229,7 +232,7 @@ public class Food {
                 getProducts();
                 orderline.setProduct(getProducts().stream().filter(p -> {
                     try {
-                        return p.getId() == ps.executeQuery().getInt("product_id");
+                        return p.getId() == rs.getInt("product_id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -249,16 +252,17 @@ public class Food {
     public List<PhoneNumber> getPhoneNumbers() {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM phone_number;");
-            while (ps.executeQuery().next()) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 PhoneNumber phoneNumber = new PhoneNumber();
-                phoneNumber.setId(ps.executeQuery().getLong("id"));
-                phoneNumber.setPhoneNumber(ps.executeQuery().getString("number"));
-                phoneNumber.setType(ps.executeQuery().getString("type"));
-                phoneNumber.setCountryCode(CountryCode.getByCode(ps.executeQuery().getString("country_code")));
+                phoneNumber.setId(rs.getLong("id"));
+                phoneNumber.setPhoneNumber(rs.getString("number"));
+                phoneNumber.setType(rs.getString("type"));
+                phoneNumber.setCountryCode(CountryCode.getByCode(rs.getString("country_code")));
                 getCustomers();
                 phoneNumber.setUser(getAllUsers().stream().filter(c -> {
                     try {
-                        return c.getId() == ps.executeQuery().getInt("user_id");
+                        return c.getId() == rs.getInt("user_id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -270,6 +274,7 @@ public class Food {
         }
         return phoneNumbers;
     }
+
     // Get all Carts from the database
     @GET
     @Path("/getCarts")
@@ -282,7 +287,7 @@ public class Food {
                 Cart cart = new Cart();
                 cart.setId(rs.getInt("id"));
                 getStores();
-                cart.setStore(stores.stream().filter(c->{
+                cart.setStore(stores.stream().filter(c -> {
                     try {
                         return c.getId() == rs.getInt("customer_id");
                     } catch (SQLException e) {
@@ -292,7 +297,7 @@ public class Food {
                 getCustomers();
                 cart.setCustomer(getCustomers().stream().filter(c -> {
                     try {
-                        return c.getId() == ps.executeQuery().getInt("customer_id");
+                        return c.getId() == rs.getInt("customer_id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
