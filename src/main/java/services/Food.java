@@ -23,16 +23,17 @@ public class Food {
     List<Cart> carts = new ArrayList<>();
     List<Order> orders = new ArrayList<>();
     List<Orderline> orderlines = new ArrayList<>();
+
     List<User> users = new ArrayList<>();
     List<PickupTime> pickupTimes = new ArrayList<>();
 
     List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
 
-    @PostConstruct
-    public void init() {
-        connection = Connections.getConnection();
-    }
+//    @PostConstruct
+//    public void init() {
+//        connection = Connections.getConnection();
+//    }
 
     //Get all Users from database
     @GET
@@ -52,6 +53,7 @@ public class Food {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Store> getStores() {
         stores = new ArrayList<>();
+        connection = Connections.getConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM store;");
             ResultSet rs2 = ps.executeQuery();
@@ -89,6 +91,14 @@ public class Food {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return stores;
     }
@@ -135,6 +145,14 @@ public class Food {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return products;
     }
@@ -144,6 +162,7 @@ public class Food {
     @Path("/getCustomers")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Customer> getCustomers() {
+        connection = Connections.getConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer");
             ResultSet rs = ps.executeQuery();
@@ -175,6 +194,14 @@ public class Food {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return customers;
     }
@@ -209,13 +236,14 @@ public class Food {
         return orders;
     }
 
-    // Get all Orderlines from the database
+    //   Get all Orderlines from the database
     @GET
     @Path("/getOrderlines")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Orderline> getOrderlines() {
+        connection = Connections.getConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orderline;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM order_line;");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Orderline orderline = new Orderline();
@@ -241,6 +269,14 @@ public class Food {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return orderlines;
     }
@@ -280,6 +316,7 @@ public class Food {
     @Path("/getCarts")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Cart> getCarts() {
+        connection = Connections.getConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM cart;");
             ResultSet rs = ps.executeQuery();
@@ -302,11 +339,28 @@ public class Food {
                         throw new RuntimeException(e);
                     }
                 }).findFirst().get());
-                orders.add(cart.makeReserved());
+                cart.setValidThrough(rs.getTime("valid_through"));
+                cart.setPaymentType(PaymentType.valueOf(rs.getString("payment_type")));
+                getOrderlines();
+                cart.setOrderlines(orderlines.stream().filter(o -> {
+                    try {
+                        return o.getCart().getId() == rs.getLong("id");
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList()));
                 carts.add(cart);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return carts;
     }

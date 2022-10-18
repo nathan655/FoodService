@@ -2,8 +2,9 @@ package models;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -20,11 +21,11 @@ public class Cart {
         this.id = id;
     }
 
-    public LocalDate getValidThrough() {
+    public Time getValidThrough() {
         return validThrough;
     }
 
-    public void setValidThrough(LocalDate validThrough) {
+    public void setValidThrough(Time validThrough) {
         this.validThrough = validThrough;
     }
 
@@ -36,11 +37,15 @@ public class Cart {
         this.paymentType = paymentType;
     }
 
-    public ArrayList<Orderline> getOrderlines() {
+    public List<Orderline> getOrderlines() {
         return orderlines;
     }
 
-    public void setOrderlines(ArrayList<Orderline> orderlines) {
+    public void addOrderline(Orderline orderline) {
+        orderlines.add(orderline);
+    }
+
+    public void setOrderlines(List<Orderline> orderlines) {
         this.orderlines = orderlines;
     }
 
@@ -51,12 +56,12 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    private LocalDate validThrough;
+    private Time validThrough;
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
     @OneToMany(mappedBy = "cart")
-    private ArrayList<Orderline> orderlines;
+    private List<Orderline> orderlines;
 
     public Customer getCustomer() {
         return customer;
@@ -101,7 +106,7 @@ public class Cart {
     }
 
     public void expire() {
-        if (LocalDate.now().isAfter(validThrough)) {
+        if (validThrough.after(Time.valueOf(String.valueOf(LocalDateTime.now())))) {
             for (Orderline orderline : orderlines) {
                 orderline.getProduct().setAvailable(true);
             }

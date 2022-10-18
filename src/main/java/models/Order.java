@@ -3,6 +3,7 @@ package models;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Order {
@@ -29,7 +30,8 @@ public class Order {
     private Store store;
     private PaymentType paymentType;
     private double total;
-    private ArrayList<Orderline> orderlines;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<Orderline> orderlines = new ArrayList<>();
 
     public boolean isPaid() {
         return paid;
@@ -113,11 +115,11 @@ public class Order {
     }
 
 
-    public ArrayList<Orderline> getOrderlines() {
+    public List<Orderline> getOrderlines() {
         return orderlines;
     }
 
-    public void setOrderlines(ArrayList<Orderline> orderlines) {
+    public void setOrderlines(List<Orderline> orderlines) {
         this.orderlines = orderlines;
     }
 
