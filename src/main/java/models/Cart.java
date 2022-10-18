@@ -1,7 +1,12 @@
 package models;
 
+import conn.Connections;
+
 import javax.persistence.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -80,30 +85,28 @@ public class Cart {
         this.store = store;
     }
 
-    public Order makeReserved() {
+    public Order makeReserved(PickupTime pickupTime) throws SQLException {
         Order order = new Order();
         order.setCustomer(customer);
         order.setOrderlines(orderlines);
         order.setStore(store);
         order.setPaymentType(paymentType);
-        StringBuilder orderNumber = createOrderNumber();
-        orderNumber.append("id_").append(order.getId());
-        order.setOrderNumber(orderNumber.toString());
+        Connection connection = Connections.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO order_table (customer_id, store_id, payment_type, order_date, pickup_time, order_number, paid,total,status) VALUES (?, ?, ?,  ?, ?, ?, ?, ?, ?)");
+        preparedStatement.setInt(1, customer.getId());
+        preparedStatement.setInt(2, store.getId());
+        preparedStatement.setString(3, paymentType.toString());
+        preparedStatement.setDate(4, java.sql.Date.valueOf(LocalDateTime.now().toLocalDate()));
+        preparedStatement.setInt(5, pickupTime.getId());
+        preparedStatement.setString(6, order.getOrderNumber());
+        preparedStatement.setBoolean(7, false);
+        preparedStatement.setDouble(8, order.getTotal());
+        preparedStatement.setString(9, "SORTING");
+        preparedStatement.executeUpdate();
+
         return order;
     }
 
-    private StringBuilder createOrderNumber() {
-        final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        final char[] ALPHANUMERIC = (letters + letters.toLowerCase() + "0123456789").toCharArray();
-        final int length = 12;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 10; i++) {
-            builder.append(ALPHANUMERIC[(int) (Math.random() * ALPHANUMERIC.length)]);
-        }
-        return builder;
-
-
-    }
 
     public void expire() {
         if (validThrough.after(Time.valueOf(String.valueOf(LocalDateTime.now())))) {

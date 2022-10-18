@@ -21,11 +21,6 @@ public class CartRestController extends Food {
     @GET
     @Path("test")
     public String test() throws IOException, WriterException {
-        Product product = new Product();
-        Orderline orderline = new Orderline();
-        Customer customer = new Customer();
-        Cart cart = new Cart();
-        cart.makeReserved();
         return "Prolly works"; //TODO replace this stub to something useful
     }
 
@@ -122,6 +117,40 @@ public class CartRestController extends Food {
         stmt.executeUpdate();
         getCarts();
         return "Cart deleted";
+    }
+
+    private StringBuilder createOrderNumber() {
+        final String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        final char[] ALPHANUMERIC = (letters + letters.toLowerCase() + "0123456789").toCharArray();
+        final int length = 12;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            builder.append(ALPHANUMERIC[(int) (Math.random() * ALPHANUMERIC.length)]);
+        }
+        return builder;
+
+
+    }
+
+    @PUT
+    @Path("makeReserved/{id}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String makeReserved(@PathParam("id") int id, PickupTime pickupTime) throws SQLException {
+        connection = Connections.getConnection();
+        getCart(id).makeReserved(pickupTime);
+        getOrders();
+        List<Order> CustomerOrders = orders.stream().filter(o -> o.getCustomer().getId() == getCart(id).getCustomer().getId()).toList();
+        Order order = CustomerOrders.get(CustomerOrders.size() - 1);
+        StringBuilder orderNumber = createOrderNumber();
+        orderNumber.append("id_").append(order.getId());
+        order.setOrderNumber(orderNumber.toString());
+        PreparedStatement stmt = connection.prepareStatement("UPDATE order_table SET order_number = ? WHERE id = ?");
+        stmt.setString(1, order.getOrderNumber());
+        stmt.setInt(2, order.getId());
+        stmt.executeUpdate();
+
+
+        return "Order reserved";
     }
 
 }

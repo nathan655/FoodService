@@ -8,7 +8,7 @@ import java.time.LocalTime;
 public class PickupTime {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
@@ -34,11 +34,11 @@ public class PickupTime {
         this.weekday = weekday;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

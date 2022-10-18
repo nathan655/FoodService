@@ -25,6 +25,7 @@ public class Food {
     List<Orderline> orderlines = new ArrayList<>();
 
     List<User> users = new ArrayList<>();
+
     List<PickupTime> pickupTimes = new ArrayList<>();
 
     List<PhoneNumber> phoneNumbers = new ArrayList<>();
@@ -45,6 +46,36 @@ public class Food {
         users.addAll(customers);
         users.addAll(stores);
         return users;
+    }
+
+    @GET
+    @Path("getPickupTimes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<PickupTime> getPickupTimes() {
+        try {
+            connection = Connections.getConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM pickup_time");
+            while (rs.next()) {
+                PickupTime pickupTime = new PickupTime();
+                pickupTime.setId(rs.getInt("id"));
+                pickupTime.setWeekday(Weekdays.valueOf(rs.getString("weekday")));
+                pickupTime.setStartTime(rs.getTime("start_time").toLocalTime());
+                pickupTime.setEndTime(rs.getTime("end_time").toLocalTime());
+                pickupTimes.add(pickupTime);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return pickupTimes;
     }
 
     // Get all Stores from the database
@@ -70,7 +101,7 @@ public class Food {
                 store.setCreatedDate(rs2.getDate("created_date").toLocalDate());
                 store.setUpdatedDate(rs2.getDate("updated_date").toLocalDate());
                 store.setUserName(rs2.getString("user_name"));
-//                getPickupTimes();
+                getPickupTimes();
                 store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
                     try {
                         return pickupTime.getStore().getId() == rs2.getInt("id");
