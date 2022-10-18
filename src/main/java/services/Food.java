@@ -122,7 +122,7 @@ public class Food {
                 product.setQuantity(rs.getInt("quantity"));
                 product.setAvailable(rs.getBoolean("available"));
                 product.setDescription(rs.getString("description"));
-                product.setExpireDate(rs.getDate("expire_date").toLocalDate());
+                product.setExpireDate(rs.getDate("expire_date"));
                 getStores();
                 product.setStore(stores.stream().filter(s -> {
                     try {
@@ -133,7 +133,7 @@ public class Food {
                 }).findFirst().get());
                 products.add(product);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return products;

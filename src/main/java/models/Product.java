@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -12,7 +13,7 @@ public class Product {
     private String name, description;
     private FoodCategory category;
     private double newPrice, oldPrice;
-    private LocalDate expireDate;
+    private Date expireDate;
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
@@ -86,18 +87,18 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public LocalDate getExpireDate() {
+    public Date getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(LocalDate expireDate) {
+    public void setExpireDate(Date expireDate) {
         this.expireDate = expireDate;
     }
 
 
 
     public boolean isExpired() {
-        return LocalDate.now().isAfter(expireDate);
+        return LocalDate.now().isAfter(expireDate.toLocalDate());
     }
 
     public boolean isAvailable() {
