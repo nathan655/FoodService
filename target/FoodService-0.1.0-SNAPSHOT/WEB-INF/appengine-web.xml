@@ -3,21 +3,22 @@
 
     <threadsafe>true</threadsafe>
     <sessions-enabled>true</sessions-enabled>
-    <runtime>java11</runtime>
+    <runtime>java8</runtime>
 
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
         <property name="drivername" value="com.mysql.cj.jdbc.Driver"/>
-<!--        <property name="googleusername" value="root"/>-->
-<!--        <property name="googlepassword" value="kukkuu"/>-->
-<!--        <property name="googledatabasename" value="dogpoolmysqlrest"/>-->
+        <property name="googleusername" value="root"/>
+        <property name="googlepassword" value="Password123!"/>
+        <property name="googledatabasename" value="foodforthought"/>
         <property name="localusername" value="nathan"/>
         <property name="localpassword" value="Password123!"/>
         <property name="localdatabasename" value="foodforthought"/>
         <property name="socketfactory" value="com.google.cloud.sql.mysql.SocketFactory"/>
 
         <!-- the next value is from Google Cloud MySQL instance -->
-<!--        <property name="cloudsqlinstance" value="restparamexamples:europe-west3:dogpoolmysqlrest"/>-->
+        <property name="cloudsqlinstance" value="spheric-backup-365111:europe-west3:fftdb"/>
         <property name="usessl" value="false"/>
     </system-properties>
 </appengine-web-app>
+

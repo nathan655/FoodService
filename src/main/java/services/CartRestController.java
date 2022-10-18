@@ -30,5 +30,4 @@ public class CartRestController extends Food {
         getCarts();
         return carts.stream().filter(cart -> cart.getId() == id).findFirst().get();
     }
-
 }

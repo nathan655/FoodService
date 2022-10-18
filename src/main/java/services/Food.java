@@ -186,7 +186,7 @@ public class Food {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Order> getOrders() {
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM order;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM order_table;");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Order order = new Order();
@@ -302,6 +302,7 @@ public class Food {
                         throw new RuntimeException(e);
                     }
                 }).findFirst().get());
+                orders.add(cart.makeReserved());
                 carts.add(cart);
             }
         } catch (SQLException e) {

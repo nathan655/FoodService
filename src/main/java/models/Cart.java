@@ -5,7 +5,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-;
 
 @Entity
 public class Cart {

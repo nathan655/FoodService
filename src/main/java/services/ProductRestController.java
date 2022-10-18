@@ -21,7 +21,7 @@ public class ProductRestController extends Food{
     @Produces(MediaType.TEXT_PLAIN)
     public String addProduct(Product product) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product (name, description, category, new_price, old_price, available, quantity) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product (name, description, category, new_price, old_price, available, quantity,store_id) VALUES (?, ?, ?, ?, ?, ?, ?,1)");
             stmt.setString(1, product.getName());
             stmt.setString(2, product.getDescription());
             stmt.setString(3, product.getCategory().toString());
