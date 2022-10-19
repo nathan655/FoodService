@@ -101,25 +101,19 @@ public class Food {
                 store.setCreatedDate(rs2.getDate("created_date").toLocalDate());
                 store.setUpdatedDate(rs2.getDate("updated_date").toLocalDate());
                 store.setUserName(rs2.getString("user_name"));
-//                getPickupTimes();
-//                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
-                
-//                    try {
-//                        return pickupTime.getStore().getId() == rs2.getInt("id");
-//                    } catch (SQLException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }).collect(Collectors.toList()));
-                
+                store.setPhone(rs2.getString("phone"));
+                store.setUser(rs2.getString("user"));
+                getPickupTimes();
+                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
 
-//                getPhoneNumbers();
-                store.setPhoneNumbers(phoneNumbers.stream().filter(p -> {
                     try {
-                        return p.getUser().getId() == rs2.getInt("id");
+                        return pickupTime.getStore().getId() == rs2.getInt("id");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
                 }).collect(Collectors.toList()));
+
+
                 stores.add(store);
             }
         } catch (SQLException e) {
@@ -205,6 +199,8 @@ public class Food {
                 customer.setFirstName(rs.getString("first_name"));
                 customer.setLastName(rs.getString("last_name"));
                 customer.setEmail(rs.getString("email"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setUser(rs.getString("user"));
                 customer.setPassword(rs.getString("password"));
                 customer.setAddress(rs.getString("address"));
                 customer.setCity(rs.getString("city"));
@@ -215,14 +211,6 @@ public class Food {
                 customer.setUpdatedDate(rs.getDate("updated_date").toLocalDate());
                 customer.setUserName(rs.getString("user_name"));
 
-//                getPhoneNumbers();
-                customer.setPhoneNumbers(phoneNumbers.stream().filter(p -> {
-                    try {
-                        return p.getUser().getId() == rs.getInt("id");
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList()));
                 customers.add(customer);
             }
         } catch (SQLException e) {
@@ -312,36 +300,6 @@ public class Food {
             }
         }
         return orderlines;
-    }
-
-    //Get all PhoneNumbers From Database
-    @GET
-    @Path("/getPhoneNumbers")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<PhoneNumber> getPhoneNumbers() {
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM phone_number;");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                PhoneNumber phoneNumber = new PhoneNumber();
-                phoneNumber.setId(rs.getLong("id"));
-                phoneNumber.setPhoneNumber(rs.getString("number"));
-                phoneNumber.setType(rs.getString("type"));
-                phoneNumber.setCountryCode(CountryCode.getByCode(rs.getString("country_code")));
-                getCustomers();
-                phoneNumber.setUser(getAllUsers().stream().filter(c -> {
-                    try {
-                        return c.getId() == rs.getInt("user_id");
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).findFirst().get());
-                phoneNumbers.add(phoneNumber);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return phoneNumbers;
     }
 
     // Get all Carts from the database

@@ -11,13 +11,13 @@
         <property name="googleusername" value="root"/>
         <property name="googlepassword" value="Password123!"/>
         <property name="googledatabasename" value="foodforthought"/>
-        <property name="localusername" value="root"/>
+        <property name="localusername" value="nathan"/>
         <property name="localpassword" value="Password123!"/>
         <property name="localdatabasename" value="foodforthought"/>
         <property name="socketfactory" value="com.google.cloud.sql.mysql.SocketFactory"/>
 
         <!-- the next value is from Google Cloud MySQL instance -->
-        <property name="cloudsqlinstance" value="spheric-backup-365111:europe-west3:fftdb"/>
+        <property name="cloudsqlinstance" value="food-for-thought-365315:europe-west3:foodforthought"/>
         <property name="usessl" value="false"/>
     </system-properties>
 </appengine-web-app>
