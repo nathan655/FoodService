@@ -86,7 +86,7 @@ public class CartRestController extends Food {
             stmt1.setInt(1, orderline.getQuantity());
             stmt1.setInt(2, orderline.getProduct().getId());
             getCarts();
-            List<Cart> CustomerCarts = carts.stream().filter(cart2 -> cart2.getCustomer().getId() == customer_id).toList();
+            List<Cart> CustomerCarts = carts.stream().filter(cart2 -> cart2.getCustomer().getId() == customer_id).collect(Collectors.toList());
             Cart cart1 = CustomerCarts.get(CustomerCarts.size() - 1);
             stmt1.setInt(3, cart1.getId());
             stmt1.executeUpdate();
@@ -139,7 +139,7 @@ public class CartRestController extends Food {
         connection = Connections.getConnection();
         getCart(id).makeReserved(pickupTime);
         getOrders();
-        List<Order> CustomerOrders = orders.stream().filter(o -> o.getCustomer().getId() == getCart(id).getCustomer().getId()).toList();
+        List<Order> CustomerOrders = orders.stream().filter(o -> o.getCustomer().getId() == getCart(id).getCustomer().getId()).collect(Collectors.toList());
         Order order = CustomerOrders.get(CustomerOrders.size() - 1);
         StringBuilder orderNumber = createOrderNumber();
         orderNumber.append("id_").append(order.getId());

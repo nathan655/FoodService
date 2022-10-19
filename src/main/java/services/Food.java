@@ -248,7 +248,7 @@ public class Food {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Order order = new Order();
-                order.setId(rs.getLong("id"));
+                order.setId(rs.getInt("id"));
                 order.setOrderDate(LocalDate.now());
                 order.setTotal(rs.getDouble("total"));
                 getCustomers();
