@@ -101,14 +101,16 @@ public class Food {
                 store.setCreatedDate(rs2.getDate("created_date").toLocalDate());
                 store.setUpdatedDate(rs2.getDate("updated_date").toLocalDate());
                 store.setUserName(rs2.getString("user_name"));
-                getPickupTimes();
-                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
-                    try {
-                        return pickupTime.getStore().getId() == rs2.getInt("id");
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList()));
+//                getPickupTimes();
+//                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
+                
+//                    try {
+//                        return pickupTime.getStore().getId() == rs2.getInt("id");
+//                    } catch (SQLException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }).collect(Collectors.toList()));
+                
 
 //                getPhoneNumbers();
                 store.setPhoneNumbers(phoneNumbers.stream().filter(p -> {
