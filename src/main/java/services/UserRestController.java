@@ -13,6 +13,18 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/User")
 public class UserRestController extends Food {
+	
+	@GET
+	@Path("/getUser/{uid}")
+	
+    @Produces(MediaType.APPLICATION_JSON)
+	
+	public User getUserById(@PathParam("uid") String id) {
+		getAllUsers();
+		
+		Customer user = (Customer) users.stream().filter(customer -> customer.getUser() == id).findFirst().get();
+		return user;
+	}
 
 	
 	@POST

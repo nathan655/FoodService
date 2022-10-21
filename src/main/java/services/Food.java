@@ -103,15 +103,15 @@ public class Food {
                 store.setUserName(rs2.getString("user_name"));
                 store.setPhone(rs2.getString("phone"));
                 store.setUser(rs2.getString("user"));
-//                getPickupTimes();
-//                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
-//
-//                    try {
-//                        return pickupTime.getStore().getId() == rs2.getInt("id");
-//                    } catch (SQLException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }).collect(Collectors.toList()));
+	//                getPickupTimes();
+	//                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
+	//
+	//                    try {
+	//                        return pickupTime.getStore().getId() == rs2.getInt("id");
+	//                    } catch (SQLException e) {
+	//                        throw new RuntimeException(e);
+	//                    }
+	//                }).collect(Collectors.toList()));
 
 
                 stores.add(store);
@@ -207,8 +207,8 @@ public class Food {
                 customer.setState(rs.getString("state"));
                 customer.setZipCode(rs.getString("zip_code"));
                 customer.setCountry(rs.getString("country"));
-                customer.setCreatedDate(rs.getDate("created_date").toLocalDate());
-                customer.setUpdatedDate(rs.getDate("updated_date").toLocalDate());
+//                customer.setCreatedDate(rs.getDate("created_date").toLocalDate());
+//                customer.setUpdatedDate(rs.getDate("updated_date").toLocalDate());
                 customer.setUserName(rs.getString("user_name"));
 
                 customers.add(customer);
