@@ -22,11 +22,12 @@ public class UserRestController extends Food {
     public String addUser(Customer user) {
         connection = Connections.getConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer (email, password, country, city ) VALUES (?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer (email, password, country, city, user ) VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getCountry());
             stmt.setString(4, user.getCity());
+            stmt.setString(5, user.getUser());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

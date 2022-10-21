@@ -11,7 +11,7 @@
         <property name="googleusername" value="root"/>
         <property name="googlepassword" value="Password123!"/>
         <property name="googledatabasename" value="foodforthought"/>
-        <property name="localusername" value="nathan"/>
+        <property name="localusername" value="root"/>
         <property name="localpassword" value="Password123!"/>
         <property name="localdatabasename" value="foodforthought"/>
         <property name="socketfactory" value="com.google.cloud.sql.mysql.SocketFactory"/>

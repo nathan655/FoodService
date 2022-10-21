@@ -36,5 +36,6 @@
         <servlet-name>foodService</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
+    
 </web-app>
 
