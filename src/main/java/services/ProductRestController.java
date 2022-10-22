@@ -7,12 +7,28 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/Product")
 public class ProductRestController extends Food {
+    @GET
+    @Path("/getProduct/{uid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Product> getProductForCustomer(@PathParam("uid") String id) {
+        getProducts();
+        getCustomers();
+        List<Product> products = new ArrayList<>();
+
+        if (customers.stream().filter(customer1 -> customer1.getUser().equals(id)).findFirst().isPresent()) {
+            Customer customer = customers.stream().filter(customer1 -> customer1.getUser().equals(id)).findFirst().get();
+            return products.stream().filter(product -> product.getStore().getCountry().equals(customer.getCountry())).collect(Collectors.toList());
+        } else {
+            return null;
+        }
+    }
 
 
     @POST

@@ -62,6 +62,7 @@ public class Food {
                 pickupTime.setWeekday(Weekdays.valueOf(rs.getString("weekday")));
                 pickupTime.setStartTime(rs.getTime("start_time").toLocalTime());
                 pickupTime.setEndTime(rs.getTime("end_time").toLocalTime());
+                pickupTime.setStoreId(rs.getInt("store_id"));
                 pickupTimes.add(pickupTime);
             }
         } catch (SQLException e) {
@@ -103,15 +104,15 @@ public class Food {
                 store.setUserName(rs2.getString("user_name"));
                 store.setPhone(rs2.getString("phone"));
                 store.setUser(rs2.getString("user"));
-	//                getPickupTimes();
-	//                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
-	//
-	//                    try {
-	//                        return pickupTime.getStore().getId() == rs2.getInt("id");
-	//                    } catch (SQLException e) {
-	//                        throw new RuntimeException(e);
-	//                    }
-	//                }).collect(Collectors.toList()));
+                getPickupTimes();
+                store.setPickupTimes(pickupTimes.stream().filter(pickupTime -> {
+
+                    try {
+                        return pickupTime.getStoreId() == rs2.getInt("id");
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList()));
 
 
                 stores.add(store);

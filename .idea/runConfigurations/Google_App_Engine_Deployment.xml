@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Google App Engine Deployment" type="gcp-app-engine-deploy" factoryName="Google App Engine Deployment" singleton="false" server-name="Google App Engine">
+    <deployment type="appengine-artifact-source" name="FoodService:war exploded" project="food-for-thought-365315" version="auto">
+      <settings cloudProjectName="food-for-thought-365315" deployAllConfigs="true" environment="APP_ENGINE_STANDARD" googleUsername="nathan22000@student.hamk.fi" version="" />
+    </deployment>
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="package" />
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="FoodService" />
+        <artifact name="FoodService:war" />
+        <artifact name="FoodService:war exploded" />
+      </option>
+    </method>
+  </configuration>
+</component>

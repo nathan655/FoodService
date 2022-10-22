@@ -8,7 +8,16 @@ import java.time.LocalTime;
 public class PickupTime {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private int id, storeId;
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
+    }
+
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
